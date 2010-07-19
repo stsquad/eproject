@@ -293,11 +293,29 @@ With the prefix arg LOOK-IN-INVISIBLE-BUFFERS looks in buffers that are not curr
              eshell-buffer))))) ;; returns eshell-buf so you can focus
                                 ;; the window if you want
 
+; Build and maintain a compile-history for each project root
+(defun eproject--build-new-history ()
+  "Build up a compile history for a given eproject based
+  common-compiles"
+  (let ((potential-compiles (eval (eproject-attribute :common-compiles)))
+	(new-compile-history))
+    (if potential-compiles 
+	(dolist (c potential-compiles new-compile-history)
+	  (setq new-compile-history (cons
+				     (format "cd %s && %s" (eproject-root) c)
+				     new-compile-history)))
+      (setq new-compile-history (format "cd %s && make -k"
+					(eproject-root))))))
+
 ;;;###autoload
 (defun eproject-compile ()
   "Run `compile-command' in the project root."
   (interactive)
-  (let ((default-directory (eproject-root)))
+  (let* ((default-directory (eproject-root))
+	 (ehistory (eproject--build-new-history))
+	 (ecompile (read-shell-command
+		    "Compile command: "
+		    (car ehistory) (cons ehistory))))
     (call-interactively #'compile)))
 
 (provide 'eproject-extras)
