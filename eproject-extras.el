@@ -306,7 +306,7 @@ compile history"
 	  '(lambda (c)
 	     (format "cd %s && %s" (eproject-root) c))
 	  potential-compiles)
-       (format "cd %s && make -k" (eproject-root))))))
+       (list (format "cd %s && make -k" (eproject-root)))))))
 
 ;;;###autoload
 (defun eproject-compile ()
