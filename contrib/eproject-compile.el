@@ -51,10 +51,14 @@
    (let ((potential-compiles (eproject-attribute :common-compiles))
 	 (new-compile-history (list ())))
      (if potential-compiles
-	 (mapcar
-	  '(lambda (c)
-	     (format "cd %s && %s" (eproject-root) c))
-	  potential-compiles)
+         (let ((r '()))
+           (mapc
+            '(lambda (c)
+               (cond
+                ((functionp c) (setq r (append r (funcall c (eproject-root)))))
+                ((stringp c) (setq r (append r (list (format "cd %s && %s" (eproject-root) c)))))))
+            potential-compiles)
+           r)
        (list (format "cd %s && make -k" (eproject-root)))))))
 
 ;;;###autoload
