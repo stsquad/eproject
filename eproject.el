@@ -410,7 +410,7 @@ what to look for.  Some examples:
 (defmacro* eproject--do-in-buffer ((buffer) &body forms)
   `(with-current-buffer ,buffer
      (when (not eproject-mode)
-       (error "Buffer is not an eproject buffer!"))
+       (warn "Buffer %s is not an eproject buffer!" (buffer-name (current-buffer))))
      ,@forms))
 
 (defun* eproject-root (&optional (buffer (current-buffer)))
