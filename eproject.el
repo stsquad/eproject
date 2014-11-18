@@ -212,7 +212,7 @@
 ;;; Code:
 
 (require 'cl)
-(require 'eshell) ;; For portable path handling
+(require 'esh-util) ;; For portable path handling
 
 (defgroup eproject nil
   "Eproject; provide support for grouping files and buffers into projects"
