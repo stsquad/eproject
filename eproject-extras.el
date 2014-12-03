@@ -33,8 +33,6 @@
 
 (require 'eproject)
 (require 'cl)
-(require 'ibuffer)
-(require 'ibuf-ext)
 
 ;; support for visiting other project files
 (defalias 'eproject-ifind-file 'eproject-find-file)  ;; ifind is deperecated
@@ -161,44 +159,6 @@ With prefix argument 4, first ask which project."
 With prefix argument 4, first ask which project."
   (interactive "p")
   (eproject--generic-switch-to-buffer prefix #'switch-to-buffer-other-frame))
-
-;; ibuffer support
-
-(define-ibuffer-filter eproject-root
-    "Filter buffers that have the provided eproject root"
-  (:reader (read-directory-name "Project root: " (ignore-errors (eproject-root)))
-   :description "project root")
-  (with-current-buffer buf
-    (equal (file-name-as-directory (expand-file-name qualifier))
-           (ignore-errors (eproject-root)))))
-
-(define-ibuffer-filter eproject
-    "Filter buffers that have the provided eproject name"
-  (:reader (eproject--do-completing-read "Project name: " (eproject-project-names))
-   :description "project name")
-  (with-current-buffer buf
-    (equal qualifier
-           (ignore-errors (eproject-name)))))
-
-(define-ibuffer-column eproject (:name "Project" :inline t)
-  (ignore-errors (eproject-name)))
-
-;;;###autoload
-(defun eproject-ibuffer (prefix)
-  "Open an IBuffer window showing all buffers in the current project, or named project if PREFIX arg is supplied."
-  (interactive "p")
-  (if (= prefix 4)
-      (call-interactively #'eproject--ibuffer-byname)
-    (ibuffer nil "*Project Buffers*"
-             (list (cons 'eproject-root (eproject-root))))))
-
-(defun eproject--ibuffer-byname (project-name)
-  "Open an IBuffer window showing all buffers in the project named PROJECT-NAME."
-  (interactive (list
-                (eproject--do-completing-read
-                 "Project name: " (eproject-project-names))))
-  (ibuffer nil (format "*%s Buffers*" project-name)
-           (list (cons 'eproject project-name))))
 
 ;; extra macros
 
