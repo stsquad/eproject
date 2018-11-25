@@ -409,9 +409,8 @@ what to look for.  Some examples:
 
 (defmacro* eproject--do-in-buffer ((buffer) &body forms)
   `(with-current-buffer ,buffer
-     (when (not eproject-mode)
-       (warn "Buffer %s is not an eproject buffer!" (buffer-name (current-buffer))))
-     ,@forms))
+     (when (eproject-mode)
+       ,@forms)))
 
 (defun* eproject-root (&optional (buffer (current-buffer)))
   "Return the value of the eproject variable root.

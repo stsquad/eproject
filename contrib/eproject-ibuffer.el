@@ -25,6 +25,7 @@
 ;;; Code:
 
 (require 'eproject)
+(require 'eproject-extras)
 (require 'ibuffer)
 (require 'ibuf-ext)
 (require 'ibuf-macs)
